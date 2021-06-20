@@ -1,5 +1,5 @@
 
-get_data <- function () {
+get_data <- function (sort_col = "name") {
 
   data_file <- list.files ("data",
                            pattern = "*.tsv$",
@@ -10,6 +10,7 @@ get_data <- function () {
                                                  readr::col_character (),
                                                  readr::col_double (),
                                                  readr::col_double (),
+                                                 readr::col_character (),
                                                  readr::col_character (),
                                                  readr::col_character (),
                                                  readr::col_double (),
@@ -25,18 +26,20 @@ get_data <- function () {
       dat$name [index_j] <- nms [index_i [1]]
   }
 
-  index <- which (!is.na (dat$Lat_origin) & !is.na (dat$Long_origin))
+  dat <- dat [which (!is.na (dat$Lat_origin) & !is.na (dat$Long_origin)), ]
 
-  return (dat [index, ])
+  dat <- dat [order (dat [[sort_col]]), ]
+
+  return (dat)
 }
 
-museumnames <- function () {
-    dat <- get_data ()
+museumnames <- function (sort_col = "name") {
+    dat <- get_data (sort_col)
     return (unique (dat$name))
 }
 
-originnames <- function () {
-    dat <- get_data ()
+originnames <- function (sort_col = "origin") {
+    dat <- get_data (sort_col)
     return (unique (dat$origin [which (!is.na (dat$origin))]))
 }
 
@@ -74,7 +77,6 @@ shinyAppServer = function(input, output, session) { # nolint
         target = "_blank")
     )
   )
-
 
   dat <<- get_data ()
 
