@@ -6,8 +6,11 @@
 #' @export
 ShinyAppUI <- fluidPage(
 
+  title = "LWL Museums",
+
    sidebarLayout(
      sidebarPanel(
+                  width = 3,
        tabsetPanel(
          id = "side_tabs",
          type = "tabs",
