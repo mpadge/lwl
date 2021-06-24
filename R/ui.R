@@ -10,7 +10,11 @@ ShinyAppUI <- fluidPage(
 
    sidebarLayout(
      sidebarPanel(
-                  width = 3,
+                  strong ("LWL Museum Collections"),
+                  helpText ("Visualisation of data collected in the 1980s from ",
+                            "34 museums in North-Rhine Westfalia, Germany. ",
+                            "Lines connect origins of extra-European items now ",
+                            "held in these museums."),
        tabsetPanel(
          id = "side_tabs",
          type = "tabs",
