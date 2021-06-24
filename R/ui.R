@@ -4,17 +4,34 @@
 #' @import shiny
 #' @import leaflet
 #' @export
-shinyAppUI <- navbarPage("LWL Destinations", # nolint
-    column(12, shiny::htmlOutput("app_info")),
-    column(width = 3,
-           checkboxInput ("alldestinations", "Select All/None", value = TRUE),
-           checkboxGroupInput("destination", "Point of destination",
-                              museumnames (),
-                              selected = museumnames ())
-    ),
-    column(width = 9,
-           mapdeck::mapdeckOutput ("map_destinations",
+ShinyAppUI <- fluidPage(
+
+   sidebarLayout(
+     sidebarPanel(
+       tabsetPanel(
+         id = "side_tabs",
+         type = "tabs",
+         tabPanel("Origins",
+                      checkboxInput ("allorigins", "Select All/None", value = TRUE),
+                      checkboxGroupInput("origin", "Point of origin",
+                                         originnames (),
+                                         selected = originnames ())),
+         tabPanel("Destinations",
+                      checkboxInput ("alldestinations", "Select All/None", value = TRUE),
+                      checkboxGroupInput("destination", "Point of destination",
+                                         museumnames (),
+                                         selected = museumnames ())),
+         tabPanel("Objects",
+                      checkboxInput ("allobjects", "Select All/None", value = TRUE),
+                      checkboxGroupInput("object", "Type of object",
+                                         objectnames (),
+                                         selected = objectnames ())),
+         tabPanel("Information", shiny::htmlOutput("app_info"))
+       )
+     ),
+     mainPanel(
+           mapdeck::mapdeckOutput ("map",
                                    height = "800px")
-    ),
-    p()
+     )
+   )
 )
