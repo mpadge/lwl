@@ -63,9 +63,7 @@ objectnames <- function (sort_col = "object") {
 #' @export
 shinyAppServer = function(input, output, session) { # nolint
 
-    #mapdeck_token <- mapdeck::mapdeck_tokens()[[1]][[1]]
-    mapdeck_token <- "pk.eyJ1Ijoic21leHVzIiwiYSI6ImNrYjd1ZjZ0ZzA5ZDcyd3FoanluaXVibXgifQ.lFbKbqMwDt4oImHg2a-DJQ"
-    Sys.setenv ("MAPBOX_TOKEN" = mapdeck_token)
+    mapdeck_token <- mapdeck::mapdeck_tokens()[[1]][[1]]
 
     if (is.null(mapdeck_token)) {
         message ("No mapdeck token found on system. ",
