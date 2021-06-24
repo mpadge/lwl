@@ -73,11 +73,30 @@ shinyAppServer = function(input, output, session) { # nolint
         mapdeck::set_token(token = Sys.getenv("MAPBOX"))
     }
 
-    #repo_sha <- system("git rev-parse --short HEAD", intern = TRUE)
-    repo_sha <- "001"
+    repo_sha <- system("git rev-parse --short HEAD", intern = TRUE)
     output$app_info <- renderText(
         paste(
-              "Warning: this is not a stable version. ",
+              "<br>This work is a collaboration between ",
+              a ("Felicity Jensz, Exzellenzcluster Religion und Politik, ",
+                 "University of Münster, Germany",
+                 href = "https://www.uni-muenster.de/Religion-und-Politik/personen/graduiertenschule/leiter/jensz.shtml",
+                 target = "_blank"
+                 ),
+              " and ",
+              a ("Ute Christina Koch",
+                 href = "mailto:ute.koch@lwl.org"),
+              "from the ",
+              a ("LWL-Museumsamt für Westfalen, Germany.",
+                 href = "https://lwl.org",
+                 target = "_blank"),
+              "Research support provided by ",
+              "Isabelle Christiani and ",
+              "Antonia Schweim<br><br>",
+              "Code by ",
+              a ("mpadge",
+                 href = "https://github.com/mpadge",
+                 target = "_blank"),
+              "<br><br>Warning: this is not a stable version. ",
               "Please do not distribute. Version",
               a(
                 repo_sha,
