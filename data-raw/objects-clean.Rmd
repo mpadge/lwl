@@ -67,7 +67,11 @@ sort (unique (obj)); length (unique (obj))
 dat$object <- obj
 ```
 ```{r}
-grep ("stoff", obj, ignore.case = TRUE, value = TRUE)
+table (dat$Land.Ort)
+dat$Land.Ort [dat$Land.Ort == "Chna"] <- "China"
+dat$Land.Ort [dat$Land.Ort == "Naher Ostem"] <- "Naher Osten"
+dat$Land.Ort [dat$Land.Ort == "Salomonen"] <- "Salomoninseln"
+dat$Land.Ort [dat$Land.Ort == "Somali"] <- "Somalia"
 ```
 ```{r}
 write.table (dat, "data/LWL.tsv", sep = "\t", row.names = FALSE)
