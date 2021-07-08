@@ -1,0 +1,87 @@
+
+
+
+```{r}
+library (magrittr)
+dat <- readxl::read_xlsx ("./data-raw/Final_Antonia_Koloniale Objekte_Gesamt ohne Werl_04062021.xlsx") %>%
+    data.frame ()
+cols <- c ("...31", "...32")
+for (i in cols) {
+    dat [[i]] [!is.na (dat [[i]])] <- paste0 (" ", dat [[i]] [!is.na (dat [[i]])])
+    dat [[i]] [is.na (dat [[i]])] <- ""
+}
+dat$Suchwort <- gsub ("^\\s+", "", paste0 (dat$Suchwort, dat$`...31`, dat$`...32`))
+dat <- dat [, -match (cols, names (dat))]
+
+latcols <- grep ("^Lat", names (dat))
+names (dat) [latcols] <- c ("Lat", "Lat_origin")
+loncols <- grep ("^Long", names (dat))
+names (dat) [loncols] <- c ("Long", "Long_origin")
+
+cols <- c ("Museumsname",
+           "Standort",
+           "Lat",
+           "Long",
+           "Objektbezeichnung",
+           "Hersteller.Künstler",
+           "Land.Ort",
+           "Lat_origin",
+           "Long_origin")
+
+dat <- dat [, match (cols, names (dat))]
+dat <- dat [which (!is.na (dat$Lat_origin) & !is.na (dat$Long_origin)), ]
+names (dat) [names (dat) == "Objektbezeichnung"] <- "object"
+sort (unique (dat$object))
+```
+```{r}
+obj <- dat$object
+
+obj [grep ("teller|gefäß|schal|trink|becher|topf|tisch", obj, ignore.case = TRUE)] <- "domestic"
+obj [grep ("wasser|kanne(\\s|$)|kännchen|flasche|löffel|schälchen", obj, ignore.case = TRUE)] <- "domestic"
+obj [grep ("schüssel|besteck|(^|\\s)(ess|eß)|deckel|kamm|kerzen", obj, ignore.case = TRUE)] <- "domestic"
+obj [grep ("spiegel", obj, ignore.case = TRUE)] <- "domestic"
+obj [grep ("zigar|rauch|tabak|pfeife", obj, ignore.case = TRUE)] <- "smoking"
+obj [grep ("teppich|tapete|lampe|laterne|korb$|regal|sockel", obj, ignore.case = TRUE)] <- "furniture"
+obj [grep ("vase|bild|figur|figür|ton|tier|schmuck|pokal", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("^plastik|plastik($|\\s|\\))|model|maske|dose($|\\s)", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("schnitz|behälter|^holz|bemalte|madonna|gerahmte", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("gefächerte|verzier(u|t)|aquarell|buddha|beschlag", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("relief|sammel|beklebt|büste|gebets|beschriftet", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("behang", obj, ignore.case = TRUE)] <- "decorative"
+obj [grep ("tee|tea$", obj, ignore.case = TRUE)] <- "tea"
+obj [grep ("mokka|kaffee", obj, ignore.case = TRUE)] <- "tea"
+obj [grep ("axt|speer|dolch|rüstung|schwert|pfeil|lanze$|(\\s|^)lanze", obj, ignore.case = TRUE)] <- "weaponry"
+obj [grep ("kampf|weapon|panzer|säbel|keule|brust|bogen|helm|gewehr", obj, ignore.case = TRUE)] <- "weaponry"
+obj [grep ("messer", obj, ignore.case = TRUE)] <- "domestic" # after weaponry, so kampf goes there first
+obj [grep ("trommel|flöte|music|musik|gong|rassel|horn|instrument", obj, ignore.case = TRUE)] <- "music"
+obj [grep ("buch|roman$|berich|mappe|album|koran|literatur", obj, ignore.case = TRUE)] <- "printed"
+obj [grep ("karte|zeitung|manifest|(^|\\s)heft|umschlag|foto", obj, ignore.case = TRUE)] <- "printed"
+obj [grep ("printed|diplom|biograph|druck|graphik", obj, ignore.case = TRUE)] <- "printed"
+obj [grep ("hut$|poncho|sandalen|schuh|gürtel|tuch", obj, ignore.case = TRUE)] <- "clothing"
+obj [grep ("geld|münze|dollar", obj, ignore.case = TRUE)] <- "money"
+obj [grep ("amulet|kette(\\s|$)|reif(\\s|$)", obj, ignore.case = TRUE)] <- "jewellery"
+obj [grep ("mokka|armband", obj, ignore.case = TRUE)] <- "jewellery"
+obj [grep ("spiel", obj, ignore.case = TRUE)] <- "playtoys"
+
+sort (unique (obj)); length (unique (obj))
+dat$object <- obj
+```
+```{r}
+grep ("stoff", obj, ignore.case = TRUE, value = TRUE)
+```
+```{r}
+write.table (dat, "data/LWL.tsv", sep = "\t", row.names = FALSE)
+```
+
+
+```{r}
+categories <- c ("domestic", "smoking", "furniture", "decorative", "tea", "weaponry",
+                 "music", "printed", "clothing", "money", "jewellery", "playtoys")
+dat$obj <- obj
+dat <- dat [which (obj %in% categories), ]
+```
+817 / 960 objects in these categories
+
+
+
+
