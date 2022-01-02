@@ -72,6 +72,8 @@ dat$Land.Ort [dat$Land.Ort == "Chna"] <- "China"
 dat$Land.Ort [dat$Land.Ort == "Naher Ostem"] <- "Naher Osten"
 dat$Land.Ort [dat$Land.Ort == "Salomonen"] <- "Salomoninseln"
 dat$Land.Ort [dat$Land.Ort == "Somali"] <- "Somalia"
+dat$Land.Ort [dat$Land.Ort == "Westafika"] <- "Westafrika"
+dat$Land.Ort [dat$Land.Ort == "Westafria"] <- "Westafrika"
 ```
 ```{r}
 write.table (dat, "data/LWL.tsv", sep = "\t", row.names = FALSE)
